@@ -1,0 +1,1 @@
+Program sprawdzający czy podane dwa słowa są anagramem.
