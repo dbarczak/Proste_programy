@@ -1,0 +1,1 @@
+Program utworzony w środowisku programistyczym SX programmer Expert. Służy do sterowania makietą tunelu mierzącego prędkość wraz z światłami drogowymi.

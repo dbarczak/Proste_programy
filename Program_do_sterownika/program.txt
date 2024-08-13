@@ -1,0 +1,106 @@
+IF InitialState THEN
+	Distance := 50.0;
+	BlinkTimer(IN := TRUE, PT := T#500ms);
+	IF BlinkTimer.Q THEN
+		YellowLeft := NOT YellowLeft;
+		YellowRight := NOT YellowRight;
+		BlinkTimer(IN := FALSE);
+	END_IF;
+END_IF;
+
+IF Button1 OR Button3 THEN
+	StartOn := TRUE;
+END_IF;
+IF Button2 OR Button4 THEN
+	StartOn := FALSE;
+	StopOn :=TRUE;
+END_IF;
+
+IF StartOn THEN
+	TravelTime(IN := TRUE, PT := T#60000ms);
+END_IF;
+
+IF StopOn THEN
+	TimeElapsed := TravelTime.ET;
+	TravelTime(IN := FALSE);
+	StopOn := FALSE;
+END_IF;
+
+
+IF Button1 AND NOT Lock THEN
+	Lock := TRUE;
+	Lock1 := TRUE;
+	GreenLeft := TRUE;
+	YellowLeft := FALSE;
+	RedRight := TRUE;
+	YellowRight := FALSE;
+	InitialState := FALSE;
+END_IF;
+
+IF Button3 AND NOT Lock THEN
+	Lock := TRUE;
+	Lock2 := TRUE;
+	GreenRight := TRUE;
+	YellowLeft := FALSE;
+	RedLeft := TRUE;
+	YellowRight := FALSE;
+	InitialState := FALSE;
+END_IF;
+
+IF Button2 AND Lock1 THEN
+	GreenLeft := FALSE;
+	YellowLeft := TRUE;
+	RedRight := FALSE;
+	YellowRight := TRUE;
+
+	IntValue:=TIME_TO_DINT(TimeElapsed);
+	RealValue:=DINT_TO_REAL(IntValue);
+
+	Speed := Distance / (TimeConvert(TimeElapsed)/1000.0);
+	SpeedInt := REAL_TO_INT(Speed);
+	Y0 := (SpeedInt MOD 2) <> 0;
+	Y1 := (SpeedInt / 2 MOD 2) <> 0;
+	Y2 := (SpeedInt / 4 MOD 2) <> 0;
+	Y3 := (SpeedInt / 8 MOD 2) <> 0;
+	Y4 := (SpeedInt / 16 MOD 2) <> 0;
+	Y5 := (SpeedInt / 32 MOD 2) <> 0;
+	Y6 := (SpeedInt / 64 MOD 2) <> 0;
+	Y7 := (SpeedInt / 128 MOD 2) <> 0;
+	Y8 := (SpeedInt / 256 MOD 2) <> 0;
+	Y9 := (SpeedInt / 512 MOD 2) <> 0;
+
+	Lock := FALSE;
+	Lock1 := FALSE;
+	InitialState := TRUE;
+END_IF;
+
+IF Button4 AND Lock2 THEN
+	GreenRight := FALSE;
+	YellowLeft := TRUE;
+	RedLeft := FALSE;
+	YellowRight := TRUE;
+	Speed := Distance / (TimeConvert(TimeElapsed)/1000.0);
+	SpeedInt := REAL_TO_INT(Speed);
+	Y0 := (SpeedInt MOD 2) <> 0;
+	Y1 := (SpeedInt / 2 MOD 2) <> 0;
+	Y2 := (SpeedInt / 4 MOD 2) <> 0;
+	Y3 := (SpeedInt / 8 MOD 2) <> 0;
+	Y4 := (SpeedInt / 16 MOD 2) <> 0;
+	Y5 := (SpeedInt / 32 MOD 2) <> 0;
+	Y6 := (SpeedInt / 64 MOD 2) <> 0;
+	Y7 := (SpeedInt / 128 MOD 2) <> 0;
+	Y8 := (SpeedInt / 256 MOD 2) <> 0;
+	Y9 := (SpeedInt / 512 MOD 2) <> 0;
+
+	Lock2 := FALSE;
+	Lock := FALSE;
+	InitialState := TRUE;
+END_IF;
+
+
+FUNCTION_BLOCK TimeConvert
+IntValue:=TIME_TO_DINT(TimeValue);
+RealValue:=DINT_TO_REAL(IntValue);
+TimeConvert := RealValue;
+END_FUNCTION_BLOCK
+
